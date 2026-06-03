@@ -1,14 +1,14 @@
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from services.llm import get_response
 
-app = FastAPI(title="Chat con Claude")
+app = FastAPI(title="Kimi")
 
-STATIC_DIR = Path(__file__).parent / "static"
+PUBLIC_DIR = Path(__file__).parent / "public"
 
 
 class ChatRequest(BaseModel):
@@ -27,6 +27,8 @@ def chat(request: ChatRequest) -> ChatResponse:
 
     try:
         text = get_response(prompt)
+    except ValueError as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=500,
@@ -36,4 +38,7 @@ def chat(request: ChatRequest) -> ChatResponse:
     return ChatResponse(response=text)
 
 
-app.mount("/", StaticFiles(directory=STATIC_DIR, html=True), name="static")
+if not os.getenv("VERCEL"):
+    from fastapi.staticfiles import StaticFiles
+
+    app.mount("/", StaticFiles(directory=PUBLIC_DIR, html=True), name="static")
