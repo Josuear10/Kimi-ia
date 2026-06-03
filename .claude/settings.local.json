@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(sysctl -n machdep.cpu.brand_string)",
+      "Bash(sysctl -n hw.physicalcpu)",
+      "Bash(sysctl -n hw.logicalcpu)",
+      "Bash(sysctl hw.memsize)",
+      "Bash(system_profiler SPNetworkDataType)",
+      "Bash(system_profiler SPBluetoothDataType *)",
+      "Bash(system_profiler SPStorageDataType *)",
+      "Bash(system_profiler SPDisplaysDataType *)",
+      "Bash(system_profiler SPBatteryDataType *)",
+      "Bash(system_profiler SPPowerDataType)",
+      "Bash(system_profiler SPAirPortDataType)"
+    ]
+  }
+}
