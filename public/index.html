@@ -3,788 +3,1046 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kimi</title>
+  <title>Kiwi</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
-      --bg-app: #f7f7f8;
-      --bg-sidebar: #f0f0f2;
-      --bg-main: #ffffff;
-      --bg-active: #ffffff;
-      --text-primary: #1c1c1e;
-      --text-secondary: #6b6b70;
-      --text-muted: #9b9ba1;
-      --border: #e8e8ec;
-      --pink-50: #fdf2f8;
-      --pink-100: #fce7f3;
-      --pink-200: #fbcfe8;
-      --pink-300: #f9a8d4;
-      --pink-400: #f472b6;
-      --pink-accent: #ec4899;
-      --pink-soft: #fff5fa;
-      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04);
-      --radius-sm: 10px;
-      --radius-md: 14px;
-      --radius-lg: 20px;
-      --radius-pill: 999px;
-      --sidebar-width: 248px;
+      --primary: #0052FF;
+      --primary-hover: #003ECB;
+      --primary-ring: rgba(0, 82, 255, 0.10);
+      --primary-soft: #EEF3FF;
+      --secondary: #5B616E;
+      --neutral: #8A919E;
+      --bg: #F9FAFB;
+      --surface: #FFFFFF;
+      --surface-muted: #F3F4F6;
+      --text-primary: #050F1A;
+      --text-secondary: #5B616E;
+      --border: #D1D5DB;
+      --success: #05B169;
+      --success-bg: #E6F6EF;
+      --warning: #F0AD4E;
+      --error: #DF2935;
+      --error-bg: #FDECEE;
+
+      --font-sans: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --shadow-1: 0 1px 3px rgba(5, 15, 26, 0.06);
+      --shadow-2: 0 4px 12px rgba(5, 15, 26, 0.08);
+      --shadow-3: 0 12px 24px rgba(5, 15, 26, 0.12);
+
+      --radius-xs: 4px;
+      --radius-chip: 6px;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --radius-full: 9999px;
+
+      --topbar: 60px;
+      --sidebar: 280px;
+      --content: 760px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { box-sizing: border-box; }
+
+    html, body { height: 100%; }
 
     body {
       margin: 0;
-      min-height: 100vh;
-      font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg-app);
-      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 16px;
       line-height: 1.5;
+      background: var(--bg);
+      color: var(--text-primary);
       -webkit-font-smoothing: antialiased;
     }
 
-    .app {
-      display: flex;
-      min-height: 100vh;
+    h1, h2, h3 { line-height: 1.2; font-weight: 700; margin: 0; }
+    button, input, textarea { font-family: inherit; }
+    :focus-visible { outline: 2px solid rgba(0, 82, 255, 0.25); outline-offset: 2px; }
+    .hidden { display: none !important; }
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
     }
 
-    /* Sidebar */
-    .sidebar {
-      width: var(--sidebar-width);
-      flex-shrink: 0;
-      background: var(--bg-sidebar);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      padding: 1.25rem 0.875rem;
+    /* ---------- Buttons ---------- */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      height: 44px; min-width: 100px; padding: 0 20px;
+      border-radius: var(--radius-sm); border: 1px solid transparent;
+      font-size: 15px; font-weight: 700; cursor: pointer; white-space: nowrap;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
     }
+    .btn svg { width: 18px; height: 18px; flex-shrink: 0; }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-hover); }
+    .btn-secondary { background: var(--surface); color: var(--text-primary); border-color: var(--border); }
+    .btn-secondary:hover:not(:disabled) { border-color: var(--primary); }
+    .btn-ghost { background: transparent; color: var(--primary); min-width: 0; padding: 0 12px; }
+    .btn-ghost:hover:not(:disabled) { background: var(--primary-soft); }
+    .btn-block { width: 100%; }
+    .btn-danger { background: var(--error); color: #fff; }
+    .btn-danger:hover:not(:disabled) { background: #B81F2A; }
 
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0 0.5rem 1.25rem;
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
+    /* ---------- Modal ---------- */
+    .modal {
+      width: calc(100% - 32px); max-width: 420px; padding: 24px; border: none;
+      border-radius: var(--radius-lg); background: var(--surface); color: var(--text-primary);
+      box-shadow: var(--shadow-3);
     }
-
-    .brand-icon {
-      width: 28px;
-      height: 28px;
-      border-radius: 8px;
-      background: linear-gradient(135deg, var(--pink-200), var(--pink-300));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: var(--pink-accent);
-      font-size: 0.85rem;
-      font-weight: 800;
+    .modal::backdrop { background: rgba(5, 15, 26, 0.4); }
+    .modal[open] { animation: modal-in 0.15s ease-out; }
+    @keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
+    @media (prefers-reduced-motion: reduce) { .modal[open] { animation: none; } }
+    .modal-icon { width: 40px; height: 40px; margin-bottom: 16px; background: var(--error-bg); color: var(--error); }
+    .modal-icon svg { width: 20px; height: 20px; }
+    .modal h2 { font-size: 18px; margin-bottom: 8px; }
+    .modal-text { margin: 0 0 20px; font-size: 14px; color: var(--text-secondary); word-break: break-word; }
+    .modal-text strong { color: var(--text-primary); font-weight: 500; }
+    .modal .notice { margin-bottom: 20px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 12px; }
+    @media (max-width: 640px) {
+      .modal-actions { flex-direction: column-reverse; }
+      .modal-actions .btn { width: 100%; }
     }
+    .btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
-    .nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
+    .icon-btn {
+      display: grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0;
+      border: none; border-radius: var(--radius-sm); background: transparent;
+      color: var(--text-secondary); cursor: pointer;
     }
+    .icon-btn:hover { background: var(--surface-muted); color: var(--text-primary); }
+    .icon-btn svg { width: 20px; height: 20px; }
 
-    .nav-item {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.6rem 0.75rem;
-      border-radius: var(--radius-sm);
-      font-size: 0.875rem;
-      color: var(--text-secondary);
-      text-decoration: none;
-      border: none;
-      background: transparent;
-      cursor: pointer;
-      width: 100%;
-      text-align: left;
-      font-family: inherit;
-    }
-
-    .nav-item svg {
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-      stroke: currentColor;
-    }
-
-    .nav-item.active {
-      background: var(--bg-active);
-      color: var(--text-primary);
-      font-weight: 500;
-      box-shadow: var(--shadow-sm);
-    }
-
-    .nav-item.active svg {
-      stroke: var(--pink-accent);
-    }
-
-    .nav-section {
-      margin-top: 1.5rem;
-    }
-
-    .nav-section-label {
-      padding: 0 0.75rem 0.5rem;
-      font-size: 0.7rem;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-    }
-
-    .sidebar-spacer {
-      flex: 1;
-    }
-
-    .user-card {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.65rem 0.75rem;
-      border-radius: var(--radius-sm);
-      background: var(--bg-active);
-      border: 1px solid var(--border);
-    }
-
-    .user-avatar {
-      width: 34px;
-      height: 34px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--pink-100), var(--pink-200));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--pink-accent);
-      flex-shrink: 0;
-    }
-
-    .user-info {
-      min-width: 0;
-    }
-
-    .user-name {
-      font-size: 0.8rem;
-      font-weight: 600;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .user-role {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Main */
-    .main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      background: var(--bg-main);
-      min-width: 0;
-      position: relative;
-    }
-
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 2rem 2rem 7rem;
-      overflow-y: auto;
-    }
-
-    .main-content.has-chat {
-      justify-content: flex-start;
-      padding-top: 2.5rem;
-    }
-
-    /* Welcome */
-    .welcome {
-      text-align: center;
-      max-width: 680px;
-      width: 100%;
-    }
-
-    .welcome.hidden {
-      display: none;
-    }
-
-    .welcome h1 {
-      margin: 0 0 0.75rem;
-      font-size: clamp(1.75rem, 4vw, 2.25rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      color: var(--text-primary);
-    }
-
-    .welcome h1 span {
-      color: var(--pink-accent);
-    }
-
-    .welcome p {
-      margin: 0 auto 2rem;
-      max-width: 520px;
-      font-size: 0.95rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-    }
-
-    .suggestions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 0.6rem;
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    .suggestion {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.45rem;
-      padding: 0.55rem 1rem;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-pill);
-      background: var(--bg-main);
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: border-color 0.15s, background 0.15s, color 0.15s;
-      font-family: inherit;
-    }
-
-    .suggestion svg {
-      width: 15px;
-      height: 15px;
-      stroke: var(--pink-400);
-      flex-shrink: 0;
-    }
-
-    .suggestion:hover {
-      border-color: var(--pink-200);
-      background: var(--pink-soft);
-      color: var(--text-primary);
-    }
-
-    /* Chat area */
-    #chat-area {
-      width: 100%;
-      max-width: 720px;
-    }
-
-    #chat-area.hidden {
-      display: none;
-    }
-
-    .exchange {
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    .message {
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-    }
-
-    .message-avatar {
-      width: 32px;
-      height: 32px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.7rem;
-      font-weight: 700;
-    }
-
-    .message.user .message-avatar {
-      background: var(--bg-sidebar);
-      color: var(--text-secondary);
-    }
-
-    .message.assistant .message-avatar {
-      background: linear-gradient(135deg, var(--pink-100), var(--pink-200));
-      color: var(--pink-accent);
-    }
-
-    .message-body {
-      flex: 1;
-      min-width: 0;
-    }
-
-    .message-label {
-      margin: 0 0 0.25rem;
-      font-size: 0.75rem;
-      font-weight: 600;
-      color: var(--text-muted);
-    }
-
-    .message.assistant .message-label {
-      color: var(--pink-accent);
-    }
-
-    .message-text {
-      margin: 0;
-      font-size: 0.95rem;
-      white-space: pre-wrap;
-      word-break: break-word;
-      color: var(--text-primary);
-      line-height: 1.65;
-    }
-
-    .message.user .message-text {
-      color: var(--text-secondary);
-    }
-
-    .status-card {
-      text-align: center;
-      padding: 2rem;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-
-    .status-card.loading {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.6rem;
-    }
-
-    .status-card.error {
-      color: #be123c;
-      background: var(--pink-50);
-      border: 1px solid var(--pink-200);
-      border-radius: var(--radius-md);
-      padding: 1rem 1.25rem;
-    }
-
-    .dots {
-      display: inline-flex;
-      gap: 4px;
-    }
-
-    .dots span {
-      width: 6px;
-      height: 6px;
-      border-radius: 50%;
-      background: var(--pink-300);
-      animation: bounce 1.2s infinite ease-in-out;
-    }
-
-    .dots span:nth-child(2) { animation-delay: 0.15s; }
-    .dots span:nth-child(3) { animation-delay: 0.3s; }
-
-    @keyframes bounce {
-      0%, 80%, 100% { transform: translateY(0); opacity: 0.4; }
-      40% { transform: translateY(-5px); opacity: 1; }
-    }
-
-    /* Input bar */
-    .input-wrapper {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      padding: 1rem 2rem 1.25rem;
-      background: linear-gradient(to top, var(--bg-main) 70%, transparent);
-    }
-
-    .input-bar {
-      max-width: 720px;
-      margin: 0 auto;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.5rem 0.5rem 0.5rem 1rem;
-      background: var(--bg-main);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-lg);
-      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+    /* ---------- Inputs ---------- */
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field label { font-size: 14px; font-weight: 500; }
+    .input {
+      height: 44px; padding: 0 14px; font-size: 16px; color: var(--text-primary);
+      border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface);
       transition: border-color 0.15s, box-shadow 0.15s;
     }
+    .input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-ring); }
+    .input[aria-invalid="true"] { border-color: var(--error); }
 
-    .input-bar:focus-within {
-      border-color: var(--pink-200);
-      box-shadow: 0 2px 16px rgba(236, 72, 153, 0.08);
+    /* ---------- Chips & cards ---------- */
+    .chip {
+      display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px;
+      border-radius: var(--radius-chip); font-size: 13px; font-weight: 500;
+      background: var(--surface-muted); color: var(--text-secondary);
+    }
+    .chip-success { background: var(--success-bg); color: var(--success); }
+    .chip-error { background: var(--error-bg); color: var(--error); }
+    .dot { width: 6px; height: 6px; border-radius: var(--radius-full); background: currentColor; }
+
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-md); padding: 20px; box-shadow: var(--shadow-1);
     }
 
-    .input-icon {
-      flex-shrink: 0;
-      color: var(--text-muted);
-      display: flex;
-      align-items: center;
+    .icon-wrap {
+      width: 32px; height: 32px; border-radius: var(--radius-full); flex-shrink: 0;
+      background: var(--primary-soft); color: var(--primary); display: grid; place-items: center;
     }
+    .icon-wrap svg { width: 16px; height: 16px; }
 
-    .input-icon svg {
-      width: 18px;
-      height: 18px;
-      stroke: var(--pink-300);
+    .brand-icon {
+      width: 32px; height: 32px; border-radius: var(--radius-full); flex-shrink: 0;
+      background: var(--primary); color: #fff; display: grid; place-items: center;
     }
+    .brand-icon svg { width: 18px; height: 18px; }
 
+    .notice { margin: 0; padding: 10px 14px; border-radius: var(--radius-sm); font-size: 14px; }
+    .notice-error { background: var(--error-bg); color: var(--error); }
+    .notice-success { background: var(--success-bg); color: #047A4A; }
+
+    /* ---------- Auth screen ---------- */
+    .auth {
+      min-height: 100vh; display: grid; place-items: center; padding: 24px 16px;
+    }
+    .auth-card {
+      width: 100%; max-width: 420px; padding: 32px;
+      border-radius: var(--radius-lg); box-shadow: var(--shadow-3);
+    }
+    .auth-brand { display: flex; align-items: center; gap: 10px; font-size: 20px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 24px; }
+    .auth-card h1 { font-size: 24px; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .auth-card .lead { margin: 0 0 24px; font-size: 14px; color: var(--text-secondary); }
+    .auth-form { display: flex; flex-direction: column; gap: 16px; }
+    .oauth { display: flex; flex-direction: column; gap: 12px; }
+    .btn-oauth svg { width: 20px; height: 20px; }
+    .btn-apple { background: #000; color: #fff; }
+    .btn-apple:hover:not(:disabled) { background: #1F1F1F; }
+    .divider {
+      display: flex; align-items: center; gap: 12px; margin: 20px 0;
+      font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--neutral);
+    }
+    .divider::before, .divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+    .auth-switch { margin: 20px 0 0; text-align: center; font-size: 14px; color: var(--text-secondary); }
+    .link-btn { border: none; background: none; padding: 0; color: var(--primary); font-size: 14px; font-weight: 700; cursor: pointer; }
+    .link-btn:hover { text-decoration: underline; }
+
+    /* ---------- Top bar ---------- */
+    .topbar {
+      position: sticky; top: 0; z-index: 20; height: var(--topbar);
+      background: var(--surface); border-bottom: 1px solid var(--border);
+    }
+    .topbar-inner {
+      height: 100%; padding: 0 16px 0 20px;
+      display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 16px;
+    }
+    .topbar-left { display: flex; align-items: center; gap: 8px; }
+    .brand {
+      display: flex; align-items: center; gap: 10px; font-size: 18px; font-weight: 700;
+      letter-spacing: -0.02em; color: var(--text-primary); text-decoration: none;
+    }
+    .nav { display: flex; align-items: stretch; height: var(--topbar); gap: 8px; }
+    .nav-item {
+      display: flex; align-items: center; padding: 0 12px; border: none; border-bottom: 2px solid transparent;
+      background: transparent; font-size: 15px; font-weight: 500; color: var(--text-secondary); cursor: pointer;
+    }
+    .nav-item:hover { color: var(--text-primary); }
+    .nav-item.active { color: var(--primary); border-bottom-color: var(--primary); }
+    .user-menu { justify-self: end; display: flex; align-items: center; gap: 8px; min-width: 0; }
+    .user-email {
+      font-size: 14px; color: var(--text-secondary); max-width: 220px;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    #sidebar-toggle { display: none; }
+
+    /* ---------- Shell ---------- */
+    .shell { display: flex; min-height: calc(100vh - var(--topbar)); }
+
+    .sidebar {
+      width: var(--sidebar); flex-shrink: 0; background: var(--surface);
+      border-right: 1px solid var(--border); display: flex; flex-direction: column;
+      position: sticky; top: var(--topbar); height: calc(100vh - var(--topbar));
+    }
+    .sidebar-head { padding: 16px; border-bottom: 1px solid var(--border); }
+    .section-label {
+      margin: 0; font-size: 12px; font-weight: 500; text-transform: uppercase;
+      letter-spacing: 0.06em; color: var(--neutral);
+    }
+    .sidebar .section-label { padding: 16px 16px 8px; }
+    .conv-list { list-style: none; margin: 0; padding: 0 8px 16px; overflow-y: auto; flex: 1; }
+    .conv-item { position: relative; }
+    .conv-link {
+      display: flex; flex-direction: column; justify-content: center; gap: 2px; width: 100%;
+      min-height: 64px; padding: 10px 44px 10px 12px; border: none; border-radius: var(--radius-sm);
+      background: transparent; text-align: left; cursor: pointer; color: var(--text-primary);
+    }
+    .conv-link:hover { background: var(--bg); }
+    .conv-item.active .conv-link { background: var(--primary-soft); }
+    .conv-item.active .conv-title { color: var(--primary); }
+    .conv-title {
+      font-size: 14px; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    }
+    .conv-date {
+      font-family: var(--font-mono); font-size: 12px; color: var(--neutral); font-variant-numeric: tabular-nums;
+    }
+    .conv-delete {
+      position: absolute; right: 6px; top: 50%; transform: translateY(-50%);
+      width: 32px; height: 32px; opacity: 0;
+    }
+    .conv-item:hover .conv-delete, .conv-delete:focus-visible { opacity: 1; }
+    .conv-delete:hover { color: var(--error); background: var(--error-bg); }
+    .conv-empty { padding: 12px 16px; font-size: 14px; color: var(--neutral); }
+    .skeleton-row { height: 44px; margin: 10px 12px; }
+
+    .workspace { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+    .main { flex: 1; padding: 40px 24px 24px; display: flex; justify-content: center; }
+    .content { width: 100%; max-width: var(--content); }
+
+    /* ---------- Welcome ---------- */
+    .hero { text-align: center; margin-bottom: 40px; }
+    .hero-chip { margin-bottom: 16px; }
+    .hero h1 { font-size: 40px; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .hero h1 span { color: var(--primary); }
+    .hero p { margin: 0 auto; max-width: 520px; color: var(--text-secondary); }
+    #welcome .section-label { margin-bottom: 12px; }
+    .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .suggestion {
+      display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+      text-align: left; cursor: pointer; color: inherit; transition: border-color 0.15s;
+    }
+    .suggestion:hover { border-color: var(--primary); }
+    .suggestion-title { font-size: 16px; font-weight: 700; margin: 0; }
+    .suggestion-desc { font-size: 14px; color: var(--text-secondary); margin: 2px 0 0; }
+
+    /* ---------- Thread ---------- */
+    .thread { display: flex; flex-direction: column; gap: 16px; }
+    .message-head { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+    .avatar {
+      width: 32px; height: 32px; border-radius: var(--radius-full); flex-shrink: 0;
+      display: grid; place-items: center; font-size: 12px; font-weight: 700;
+    }
+    .avatar-user { background: var(--surface-muted); color: var(--text-secondary); }
+    .avatar-bot { background: var(--primary); color: #fff; }
+    .avatar-bot svg { width: 16px; height: 16px; }
+    .message-name { font-size: 14px; font-weight: 700; }
+    .message-meta {
+      margin-left: auto; font-family: var(--font-mono); font-size: 13px;
+      color: var(--neutral); font-variant-numeric: tabular-nums;
+    }
+    .message-text { margin: 0; white-space: pre-wrap; word-break: break-word; color: var(--text-secondary); }
+    .message-bot { border-left: 3px solid var(--primary); }
+
+    .skeleton-line {
+      height: 12px; margin-top: 10px; border-radius: var(--radius-xs);
+      background: linear-gradient(90deg, var(--surface-muted) 0%, #E5E7EB 50%, var(--surface-muted) 100%);
+      background-size: 200% 100%; animation: shimmer 1.4s ease-in-out infinite;
+    }
+    .skeleton-line:nth-child(3) { width: 92%; }
+    .skeleton-line:nth-child(4) { width: 78%; }
+    .skeleton-line:nth-child(5) { width: 54%; }
+    @keyframes shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @media (prefers-reduced-motion: reduce) { .skeleton-line { animation: none; } }
+
+    .error-card { border-color: var(--error); display: flex; gap: 12px; align-items: flex-start; }
+    .error-card .icon-wrap { background: var(--error-bg); color: var(--error); }
+    .error-card p { margin: 4px 0 0; font-size: 14px; color: var(--text-secondary); }
+
+    /* Rendered model answer (Markdown -> HTML) */
+    .md { font-size: 16px; line-height: 1.6; word-break: break-word; }
+    .md > :first-child { margin-top: 0; }
+    .md > :last-child { margin-bottom: 0; }
+    .md p { margin: 0 0 12px; }
+    .md strong { font-weight: 700; }
+    .md h1, .md h2, .md h3, .md h4 { margin: 20px 0 8px; letter-spacing: -0.01em; }
+    .md h1 { font-size: 24px; }
+    .md h2 { font-size: 20px; }
+    .md h3, .md h4 { font-size: 18px; }
+    .md ul, .md ol { margin: 0 0 12px; padding-left: 22px; }
+    .md li { margin: 4px 0; }
+    .md li::marker { color: var(--neutral); }
+    .md a { color: var(--primary); text-decoration: none; }
+    .md a:hover { text-decoration: underline; }
+    .md blockquote { margin: 0 0 12px; padding: 4px 0 4px 14px; border-left: 3px solid var(--border); color: var(--text-secondary); }
+    .md hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
+    .md code { font-family: var(--font-mono); font-size: 13px; padding: 2px 6px; border-radius: var(--radius-xs); background: var(--surface-muted); }
+    .md pre { margin: 0 0 12px; padding: 14px 16px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--bg); overflow-x: auto; }
+    .md pre code { padding: 0; background: none; line-height: 1.6; }
+    .md table { width: 100%; margin: 0 0 12px; border-collapse: collapse; font-size: 14px; display: block; overflow-x: auto; }
+    .md th, .md td { padding: 8px 12px; border-bottom: 1px solid var(--border); text-align: left; }
+    .md th { font-size: 12px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.06em; color: var(--neutral); }
+
+    /* ---------- Composer ---------- */
+    .composer-wrap {
+      position: sticky; bottom: 0; padding: 16px 24px 20px;
+      background: linear-gradient(to top, var(--bg) 75%, rgba(249, 250, 251, 0));
+    }
+    .composer {
+      max-width: var(--content); margin: 0 auto; display: flex; align-items: flex-end; gap: 12px;
+      padding: 8px; background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-md); box-shadow: var(--shadow-2);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    .composer:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-ring), var(--shadow-2); }
     #prompt {
-      flex: 1;
-      border: none;
-      outline: none;
-      font: inherit;
-      font-size: 0.9rem;
-      color: var(--text-primary);
-      background: transparent;
-      resize: none;
-      min-height: 24px;
-      max-height: 120px;
-      line-height: 1.5;
-      padding: 0.35rem 0;
+      flex: 1; min-height: 44px; max-height: 160px; padding: 10px 6px 10px 10px;
+      border: none; outline: none; resize: none; font-size: 16px;
+      color: var(--text-primary); background: transparent;
+    }
+    #prompt::placeholder { color: var(--neutral); }
+    #prompt:disabled { opacity: 0.4; }
+    .composer-footer {
+      max-width: var(--content); margin: 8px auto 0; display: flex; justify-content: space-between;
+      font-size: 12px; font-weight: 500; color: var(--neutral);
+    }
+    kbd {
+      font-family: var(--font-mono); font-size: 12px; padding: 1px 6px; border: 1px solid var(--border);
+      border-radius: var(--radius-xs); background: var(--surface); color: var(--text-secondary);
     }
 
-    #prompt::placeholder {
-      color: var(--text-muted);
-    }
+    .backdrop { display: none; }
 
-    #prompt:disabled {
-      opacity: 0.6;
-    }
+    /* ---------- Responsive ---------- */
+    @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, 1fr); } }
 
-    #submit-btn {
-      flex-shrink: 0;
-      width: 38px;
-      height: 38px;
-      border: none;
-      border-radius: 50%;
-      background: var(--pink-100);
-      color: var(--pink-accent);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: background 0.15s, transform 0.1s;
-    }
-
-    #submit-btn svg {
-      width: 18px;
-      height: 18px;
-      stroke: currentColor;
-    }
-
-    #submit-btn:hover:not(:disabled) {
-      background: var(--pink-200);
-    }
-
-    #submit-btn:active:not(:disabled) {
-      transform: scale(0.95);
-    }
-
-    #submit-btn:disabled {
-      opacity: 0.45;
-      cursor: not-allowed;
-    }
-
-    .input-footer {
-      text-align: center;
-      margin-top: 0.5rem;
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      letter-spacing: 0.02em;
-    }
-
-    @media (max-width: 768px) {
+    @media (max-width: 860px) {
+      #sidebar-toggle { display: grid; }
+      .nav, .user-email { display: none; }
+      .topbar-inner { grid-template-columns: 1fr auto; padding: 0 12px; }
       .sidebar {
-        display: none;
+        position: fixed; left: 0; top: var(--topbar); z-index: 30; box-shadow: var(--shadow-3);
+        transform: translateX(-100%); transition: transform 0.2s ease;
       }
+      .sidebar.open { transform: translateX(0); }
+      .backdrop.open {
+        display: block; position: fixed; inset: var(--topbar) 0 0 0; z-index: 25;
+        background: rgba(5, 15, 26, 0.3);
+      }
+      .conv-delete { opacity: 1; }
+    }
 
-      .main-content {
-        padding: 1.5rem 1rem 6.5rem;
-      }
-
-      .input-wrapper {
-        padding: 0.75rem 1rem 1rem;
-      }
-
-      .suggestions {
-        gap: 0.5rem;
-      }
-
-      .suggestion {
-        font-size: 0.78rem;
-        padding: 0.5rem 0.85rem;
-      }
+    @media (max-width: 640px) {
+      .main { padding: 24px 16px 16px; }
+      .hero h1 { font-size: 32px; }
+      .grid { grid-template-columns: 1fr; }
+      .composer-wrap { padding: 12px 16px 16px; }
+      .composer-footer .hint { display: none; }
+      .btn-send-label, .logout-label { display: none; }
+      #submit-btn, #logout-btn { min-width: 44px; padding: 0 12px; }
+      .auth-card { padding: 24px; }
     }
   </style>
 </head>
 <body>
-  <div class="app">
-    <aside class="sidebar">
-      <div class="brand">
-        <div class="brand-icon">K</div>
-        Kimi
-      </div>
-
-      <nav class="nav">
-        <button type="button" class="nav-item active" aria-current="page">
-          <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          Preguntar
-        </button>
-      </nav>
-
-      <div class="nav-section">
-        <p class="nav-section-label">Ayuda</p>
-        <nav class="nav">
-          <button type="button" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-              <circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/>
-            </svg>
-            Ayuda
-          </button>
-          <button type="button" class="nav-item">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/>
-            </svg>
-            Contáctanos
-          </button>
-        </nav>
-      </div>
-
-      <div class="sidebar-spacer"></div>
-
-      <div class="user-card">
-        <div class="user-avatar">Tú</div>
-        <div class="user-info">
-          <div class="user-name">Usuario</div>
-          <div class="user-role">Asistente Kimi</div>
-        </div>
-      </div>
-    </aside>
-
-    <main class="main">
-      <div class="main-content" id="main-content">
-        <section class="welcome" id="welcome">
-          <h1>Bienvenido a <span>Kimi</span></h1>
-          <p>
-            Explora las sugerencias o escribe tu consulta en la barra inferior.
-            Kimi te responderá de forma clara y directa.
-          </p>
-          <div class="suggestions" id="suggestions">
-            <button type="button" class="suggestion" data-prompt="Explícame un concepto difícil de forma sencilla">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>
-              </svg>
-              Aprendizaje
-            </button>
-            <button type="button" class="suggestion" data-prompt="Dame ideas creativas para un proyecto personal">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-              </svg>
-              Ideas
-            </button>
-            <button type="button" class="suggestion" data-prompt="Resume un texto largo en puntos clave">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
-              </svg>
-              Resúmenes
-            </button>
-            <button type="button" class="suggestion" data-prompt="Ayúdame a redactar un mensaje profesional y amable">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-              </svg>
-              Redacción
-            </button>
-            <button type="button" class="suggestion" data-prompt="Dame consejos prácticos para organizar mi día">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-              </svg>
-              Productividad
-            </button>
-            <button type="button" class="suggestion" data-prompt="Explícame paso a paso cómo resolver un problema">
-              <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
-              </svg>
-              Soluciones
-            </button>
-          </div>
-        </section>
-
-        <div id="chat-area" class="hidden" aria-live="polite"></div>
-      </div>
-
-      <div class="input-wrapper">
-        <form id="chat-form" class="input-bar">
-          <span class="input-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
-            </svg>
-          </span>
-          <textarea
-            id="prompt"
-            name="prompt"
-            rows="1"
-            placeholder="Escribe tu mensaje aquí…"
-            required
-          ></textarea>
-          <button type="submit" id="submit-btn" aria-label="Enviar">
-            <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
-            </svg>
-          </button>
-        </form>
-        <p class="input-footer">Kimi</p>
-      </div>
-    </main>
+  <!-- ================= Loading / config error ================= -->
+  <div id="boot" class="auth">
+    <div class="card auth-card" id="boot-card">
+      <div class="auth-brand"><span class="brand-icon" data-icon="logo"></span>Kiwi</div>
+      <div class="skeleton-line"></div><div class="skeleton-line"></div>
+    </div>
   </div>
 
+  <!-- ================= Auth screen ================= -->
+  <div id="auth-view" class="auth hidden">
+    <div class="card auth-card">
+      <div class="auth-brand"><span class="brand-icon" data-icon="logo"></span>Kiwi</div>
+      <h1 id="auth-title">Inicia sesión</h1>
+      <p class="lead" id="auth-lead">Tus conversaciones se guardan en tu cuenta.</p>
+
+      <div id="oauth-section" class="hidden">
+        <div class="oauth">
+          <button type="button" class="btn btn-secondary btn-block btn-oauth hidden" data-provider="google">
+            <svg viewBox="0 0 48 48" aria-hidden="true"><path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/><path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/><path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/><path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/></svg>
+            Continuar con Google
+          </button>
+          <button type="button" class="btn btn-apple btn-block btn-oauth hidden" data-provider="apple">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M16.37 1.43c0 1.14-.49 2.27-1.18 3.08-.74.9-1.99 1.57-2.99 1.57-.12 0-.23-.02-.3-.03-.01-.06-.04-.22-.04-.39 0-1.15.57-2.27 1.21-2.98.8-.94 2.14-1.64 3.25-1.68.03.13.05.28.05.43zm4.56 15.71c-.03.07-.46 1.58-1.52 3.12-.94 1.34-1.94 2.71-3.43 2.71-1.52 0-1.9-.88-3.63-.88-1.7 0-2.3.91-3.67.91-1.38 0-2.33-1.26-3.43-2.8-1.29-1.82-2.32-4.63-2.32-7.28 0-4.28 2.8-6.55 5.55-6.55 1.45 0 2.68.95 3.6.95.87 0 2.22-1.01 3.9-1.01.61 0 2.89.06 4.37 2.19-.13.09-2.38 1.37-2.38 4.19 0 3.26 2.85 4.42 2.96 4.45z"/></svg>
+            Continuar con Apple
+          </button>
+        </div>
+        <div class="divider">o con tu correo</div>
+      </div>
+
+      <form id="auth-form" class="auth-form" novalidate>
+        <div class="field">
+          <label for="auth-email">Correo electrónico</label>
+          <input class="input" id="auth-email" type="email" autocomplete="email" required>
+        </div>
+        <div class="field">
+          <label for="auth-password">Contraseña</label>
+          <input class="input" id="auth-password" type="password" autocomplete="current-password" minlength="6" required>
+        </div>
+        <p id="auth-message" class="notice hidden" role="alert"></p>
+        <button type="submit" class="btn btn-primary btn-block" id="auth-submit">Iniciar sesión</button>
+      </form>
+
+      <p class="auth-switch">
+        <span id="auth-switch-text">¿No tienes cuenta?</span>
+        <button type="button" class="link-btn" id="auth-switch">Crear cuenta</button>
+      </p>
+    </div>
+  </div>
+
+  <!-- ================= App ================= -->
+  <div id="app-view" class="hidden">
+    <header class="topbar">
+      <div class="topbar-inner">
+        <div class="topbar-left">
+          <button type="button" class="icon-btn" id="sidebar-toggle" aria-label="Mostrar conversaciones" aria-expanded="false" aria-controls="sidebar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+          </button>
+          <a class="brand" href="/" aria-label="Kiwi, inicio"><span class="brand-icon" data-icon="logo"></span>Kiwi</a>
+        </div>
+
+        <nav class="nav" aria-label="Principal">
+          <button type="button" class="nav-item active" aria-current="page">Preguntar</button>
+          <button type="button" class="nav-item">Ayuda</button>
+          <button type="button" class="nav-item">Contáctanos</button>
+        </nav>
+
+        <div class="user-menu">
+          <span class="user-email" id="user-email"></span>
+          <button type="button" class="btn btn-secondary" id="logout-btn" aria-label="Cerrar sesión">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            <span class="logout-label">Cerrar sesión</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell">
+      <aside class="sidebar" id="sidebar" aria-label="Conversaciones">
+        <div class="sidebar-head">
+          <button type="button" class="btn btn-primary btn-block" id="new-chat-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Nueva conversación
+          </button>
+        </div>
+        <p class="section-label">Historial</p>
+        <ul class="conv-list" id="conv-list"></ul>
+      </aside>
+      <div class="backdrop" id="backdrop"></div>
+
+      <div class="workspace">
+        <main class="main">
+          <div class="content">
+            <section id="welcome">
+              <div class="hero">
+                <div class="hero-chip"><span class="chip chip-success"><span class="dot"></span>En línea</span></div>
+                <h1>Bienvenido a <span>Kiwi</span></h1>
+                <p>Elige una sugerencia o escribe tu consulta abajo. Kiwi recuerda la conversación para que puedas seguir preguntando.</p>
+              </div>
+
+              <p class="section-label">Sugerencias</p>
+              <div class="grid" id="suggestions">
+                <button type="button" class="card suggestion" data-prompt="Explícame un concepto difícil de forma sencilla">
+                  <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></span>
+                  <span><p class="suggestion-title">Aprendizaje</p><p class="suggestion-desc">Conceptos difíciles, explicados simple</p></span>
+                </button>
+                <button type="button" class="card suggestion" data-prompt="Dame ideas creativas para un proyecto personal">
+                  <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6M10 22h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/></svg></span>
+                  <span><p class="suggestion-title">Ideas</p><p class="suggestion-desc">Proyectos y propuestas creativas</p></span>
+                </button>
+                <button type="button" class="card suggestion" data-prompt="Resume un texto largo en puntos clave">
+                  <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/></svg></span>
+                  <span><p class="suggestion-title">Resúmenes</p><p class="suggestion-desc">Textos largos en puntos clave</p></span>
+                </button>
+                <button type="button" class="card suggestion" data-prompt="Ayúdame a redactar un mensaje profesional y amable">
+                  <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4z"/></svg></span>
+                  <span><p class="suggestion-title">Redacción</p><p class="suggestion-desc">Mensajes profesionales y amables</p></span>
+                </button>
+                <button type="button" class="card suggestion" data-prompt="Dame consejos prácticos para organizar mi día">
+                  <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></span>
+                  <span><p class="suggestion-title">Productividad</p><p class="suggestion-desc">Organiza mejor tu día</p></span>
+                </button>
+                <button type="button" class="card suggestion" data-prompt="Explícame paso a paso cómo resolver un problema">
+                  <span class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></span>
+                  <span><p class="suggestion-title">Soluciones</p><p class="suggestion-desc">Problemas resueltos paso a paso</p></span>
+                </button>
+              </div>
+            </section>
+
+            <div id="thread" class="thread hidden" aria-live="polite"></div>
+          </div>
+        </main>
+
+        <div class="composer-wrap">
+          <form id="chat-form" class="composer">
+            <textarea id="prompt" name="prompt" rows="1" placeholder="Escribe tu mensaje aquí…" aria-label="Mensaje" maxlength="10000" required></textarea>
+            <button type="submit" id="submit-btn" class="btn btn-primary" aria-label="Enviar">
+              <span class="btn-send-label">Enviar</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+            </button>
+          </form>
+          <div class="composer-footer">
+            <span>Kiwi</span>
+            <span class="hint"><kbd>Enter</kbd> para enviar · <kbd>Shift</kbd> + <kbd>Enter</kbd> nueva línea</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= Delete confirmation ================= -->
+  <dialog class="modal" id="delete-dialog" aria-labelledby="delete-title" aria-describedby="delete-text">
+    <span class="icon-wrap modal-icon" data-icon="trash"></span>
+    <h2 id="delete-title">¿Eliminar conversación?</h2>
+    <p class="modal-text" id="delete-text">
+      Se eliminará <strong id="delete-name"></strong> con todos sus mensajes. Esta acción no se puede deshacer.
+    </p>
+    <p class="notice notice-error hidden" id="delete-error" role="alert"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="delete-cancel">Cancelar</button>
+      <button type="button" class="btn btn-danger" id="delete-confirm">Eliminar</button>
+    </div>
+  </dialog>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
   <script>
-    const form = document.getElementById("chat-form");
-    const promptInput = document.getElementById("prompt");
-    const submitBtn = document.getElementById("submit-btn");
-    const chatArea = document.getElementById("chat-area");
-    const welcome = document.getElementById("welcome");
-    const mainContent = document.getElementById("main-content");
-    const suggestions = document.getElementById("suggestions");
+    // ------------------------------------------------------------------ Icons
+    const ICONS = {
+      logo: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/><path d="M12 4v3M12 17v3M4 12h3M17 12h3"/></svg>',
+      bot: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="2.5"/></svg>',
+      alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',
+      trash: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
+    };
+    document.querySelectorAll("[data-icon]").forEach((el) => { el.innerHTML = ICONS[el.dataset.icon]; });
 
-    promptInput.addEventListener("input", () => {
-      promptInput.style.height = "auto";
-      promptInput.style.height = Math.min(promptInput.scrollHeight, 120) + "px";
-    });
+    const $ = (id) => document.getElementById(id);
+    const els = {
+      boot: $("boot"), bootCard: $("boot-card"), authView: $("auth-view"), appView: $("app-view"),
+      authForm: $("auth-form"), authEmail: $("auth-email"), authPassword: $("auth-password"),
+      authMessage: $("auth-message"), authSubmit: $("auth-submit"), authTitle: $("auth-title"),
+      authLead: $("auth-lead"), authSwitch: $("auth-switch"), authSwitchText: $("auth-switch-text"),
+      userEmail: $("user-email"), logoutBtn: $("logout-btn"), newChatBtn: $("new-chat-btn"),
+      sidebar: $("sidebar"), sidebarToggle: $("sidebar-toggle"), backdrop: $("backdrop"),
+      convList: $("conv-list"), welcome: $("welcome"), thread: $("thread"), suggestions: $("suggestions"),
+      form: $("chat-form"), prompt: $("prompt"), submit: $("submit-btn"),
+    };
 
-    promptInput.addEventListener("keydown", (event) => {
-      if (event.key === "Enter" && !event.shiftKey) {
-        event.preventDefault();
-        form.requestSubmit();
-      }
-    });
+    const state = { supabase: null, session: null, conversations: [], activeId: null, sending: false };
 
-    function setLoading(isLoading) {
-      submitBtn.disabled = isLoading;
-      promptInput.disabled = isLoading;
-    }
-
-    function showChatView() {
-      welcome.classList.add("hidden");
-      mainContent.classList.add("has-chat");
-      chatArea.classList.remove("hidden");
-    }
-
-    function showWelcomeView() {
-      welcome.classList.remove("hidden");
-      mainContent.classList.remove("has-chat");
-      chatArea.classList.add("hidden");
-      chatArea.innerHTML = "";
-    }
-
+    // ------------------------------------------------------------------ Rendering helpers
     function escapeHtml(text) {
       const div = document.createElement("div");
       div.textContent = text;
       return div.innerHTML;
     }
 
-    function renderLoading() {
+    // Fallback when the CDN libraries are unavailable: strip Markdown syntax to plain text.
+    function stripMarkdown(text) {
+      return text
+        .replace(/```[\w-]*\n?([\s\S]*?)```/g, "$1")
+        .replace(/^#{1,6}\s+/gm, "")
+        .replace(/^\s*[-*+]\s+/gm, "• ")
+        .replace(/^\s*>\s?/gm, "")
+        .replace(/(\*\*|__)(.+?)\1/g, "$2")
+        .replace(/(\*|_)(.+?)\1/g, "$2")
+        .replace(/`([^`]+)`/g, "$1")
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, "$1 ($2)");
+    }
+
+    function renderMarkdown(text) {
+      if (window.marked && window.DOMPurify) {
+        return DOMPurify.sanitize(marked.parse(text, { gfm: true, breaks: true }));
+      }
+      return `<p style="white-space: pre-wrap">${escapeHtml(stripMarkdown(text))}</p>`;
+    }
+
+    const dateFormat = new Intl.DateTimeFormat("es", { day: "2-digit", month: "short" });
+    const timeFormat = new Intl.DateTimeFormat("es", { hour: "2-digit", minute: "2-digit" });
+    function formatDate(iso) {
+      const date = new Date(iso);
+      return date.toDateString() === new Date().toDateString() ? timeFormat.format(date) : dateFormat.format(date);
+    }
+
+    function userCard(text) {
       return `
-        <div class="status-card loading">
-          <span>Kimi está pensando</span>
-          <span class="dots" aria-hidden="true"><span></span><span></span><span></span></span>
-        </div>
-      `;
+        <article class="card">
+          <div class="message-head">
+            <span class="avatar avatar-user">Tú</span>
+            <span class="message-name">Tu consulta</span>
+          </div>
+          <p class="message-text">${escapeHtml(text)}</p>
+        </article>`;
     }
 
-    function renderExchange(question, answer) {
+    function botCard(text, meta = "") {
       return `
-        <div class="exchange">
-          <div class="message user">
-            <div class="message-avatar">Tú</div>
-            <div class="message-body">
-              <p class="message-label">Tu consulta</p>
-              <p class="message-text">${escapeHtml(question)}</p>
-            </div>
+        <article class="card message-bot">
+          <div class="message-head">
+            <span class="avatar avatar-bot">${ICONS.bot}</span>
+            <span class="message-name">Kiwi</span>
+            ${meta ? `<span class="message-meta">${escapeHtml(meta)}</span>` : ""}
           </div>
-          <div class="message assistant">
-            <div class="message-avatar">K</div>
-            <div class="message-body">
-              <p class="message-label">Kimi</p>
-              <p class="message-text">${escapeHtml(answer)}</p>
-            </div>
-          </div>
-        </div>
-      `;
+          <div class="md">${renderMarkdown(text)}</div>
+        </article>`;
     }
 
-    function renderError(message) {
-      return `<div class="status-card error">${escapeHtml(message)}</div>`;
+    function pendingCard() {
+      return `
+        <article class="card message-bot" aria-busy="true" id="pending">
+          <div class="message-head">
+            <span class="avatar avatar-bot">${ICONS.bot}</span>
+            <span class="message-name">Kiwi está pensando…</span>
+          </div>
+          <div class="skeleton-line"></div><div class="skeleton-line"></div>
+          <div class="skeleton-line"></div><div class="skeleton-line"></div>
+        </article>`;
     }
 
-    async function sendPrompt(prompt) {
-      const trimmed = prompt.trim();
-      if (!trimmed) return;
+    function errorCard(message) {
+      return `
+        <div class="card error-card" role="alert">
+          <span class="icon-wrap">${ICONS.alert}</span>
+          <div><span class="chip chip-error">Error</span><p>${escapeHtml(message)}</p></div>
+        </div>`;
+    }
 
-      showChatView();
-      chatArea.innerHTML = renderLoading();
-      setLoading(true);
+    function scrollToBottom() {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
 
+    // ------------------------------------------------------------------ API
+    class ApiError extends Error {
+      constructor(message, status) { super(message); this.status = status; }
+    }
+
+    async function api(path, { method = "GET", body } = {}) {
+      // getSession() refreshes the access token when it is about to expire.
+      const { data } = await state.supabase.auth.getSession();
+      const token = data.session?.access_token;
+      let response;
       try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ prompt: trimmed }),
+        response = await fetch(path, {
+          method,
+          headers: {
+            ...(body ? { "Content-Type": "application/json" } : {}),
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: body ? JSON.stringify(body) : undefined,
         });
+      } catch {
+        throw new ApiError("No se pudo conectar con el servidor. Comprueba tu conexión.", 0);
+      }
+      if (response.status === 204) return null;
+      const payload = await response.json().catch(() => ({}));
+      if (!response.ok) {
+        const message = typeof payload.detail === "string" ? payload.detail : `Error del servidor (${response.status})`;
+        if (response.status === 401) await state.supabase.auth.signOut();
+        throw new ApiError(message, response.status);
+      }
+      return payload;
+    }
 
-        const data = await response.json().catch(() => ({}));
+    // ------------------------------------------------------------------ Views
+    function show(view) {
+      els.boot.classList.toggle("hidden", view !== "boot");
+      els.authView.classList.toggle("hidden", view !== "auth");
+      els.appView.classList.toggle("hidden", view !== "app");
+    }
 
-        if (!response.ok) {
-          const message =
-            typeof data.detail === "string"
-              ? data.detail
-              : data.detail?.message || data.message || `Error del servidor (${response.status})`;
-          chatArea.innerHTML = renderError(message);
-          return;
-        }
+    function showWelcome() {
+      state.activeId = null;
+      els.welcome.classList.remove("hidden");
+      els.thread.classList.add("hidden");
+      els.thread.innerHTML = "";
+      renderConversationList();
+    }
 
-        if (!data.response) {
-          chatArea.innerHTML = renderError("La respuesta del servidor no incluye texto.");
-          return;
-        }
+    function showThread() {
+      els.welcome.classList.add("hidden");
+      els.thread.classList.remove("hidden");
+    }
 
-        chatArea.innerHTML = renderExchange(trimmed, data.response);
+    function setSending(sending) {
+      state.sending = sending;
+      els.submit.disabled = sending;
+      els.prompt.disabled = sending;
+    }
+
+    function autoResize() {
+      els.prompt.style.height = "auto";
+      els.prompt.style.height = Math.min(els.prompt.scrollHeight, 160) + "px";
+    }
+
+    function toggleSidebar(open) {
+      els.sidebar.classList.toggle("open", open);
+      els.backdrop.classList.toggle("open", open);
+      els.sidebarToggle.setAttribute("aria-expanded", String(open));
+    }
+
+    // ------------------------------------------------------------------ Conversations
+    function renderConversationList() {
+      if (!state.conversations.length) {
+        els.convList.innerHTML = '<li class="conv-empty">Aún no tienes conversaciones.</li>';
+        return;
+      }
+      els.convList.innerHTML = state.conversations.map((c) => `
+        <li class="conv-item ${c.id === state.activeId ? "active" : ""}">
+          <button type="button" class="conv-link" data-open="${c.id}" ${c.id === state.activeId ? 'aria-current="true"' : ""}>
+            <span class="conv-title">${escapeHtml(c.title)}</span>
+            <span class="conv-date">${formatDate(c.updated_at)}</span>
+          </button>
+          <button type="button" class="icon-btn conv-delete" data-delete="${c.id}" aria-label="Eliminar «${escapeHtml(c.title)}»">${ICONS.trash}</button>
+        </li>`).join("");
+    }
+
+    async function loadConversations() {
+      els.convList.innerHTML = '<li><div class="skeleton-line skeleton-row"></div></li><li><div class="skeleton-line skeleton-row"></div></li>';
+      try {
+        state.conversations = await api("/api/conversations");
+        renderConversationList();
       } catch (err) {
-        const message =
-          err instanceof TypeError && err.message.includes("fetch")
-            ? "No se pudo conectar con el servidor. Comprueba que la aplicación esté en ejecución."
-            : "Ocurrió un error inesperado. Inténtalo de nuevo.";
-        chatArea.innerHTML = renderError(message);
-      } finally {
-        setLoading(false);
-        promptInput.style.height = "auto";
+        els.convList.innerHTML = `<li class="conv-empty">${escapeHtml(err.message)}</li>`;
       }
     }
 
-    form.addEventListener("submit", async (event) => {
+    async function openConversation(id) {
+      if (state.sending) return;
+      state.activeId = id;
+      renderConversationList();
+      toggleSidebar(false);
+      showThread();
+      els.thread.innerHTML = pendingCard();
+      try {
+        const messages = await api(`/api/conversations/${id}/messages`);
+        if (state.activeId !== id) return;  // user switched while loading
+        els.thread.innerHTML = messages
+          .map((m) => (m.role === "user" ? userCard(m.content) : botCard(m.content, formatDate(m.created_at))))
+          .join("");
+        scrollToBottom();
+      } catch (err) {
+        els.thread.innerHTML = errorCard(err.message);
+      }
+      els.prompt.focus();
+    }
+
+    // ---- Delete confirmation modal
+    const deleteDialog = {
+      el: $("delete-dialog"), name: $("delete-name"), error: $("delete-error"),
+      cancel: $("delete-cancel"), confirm: $("delete-confirm"), targetId: null,
+    };
+
+    function askDeleteConversation(id) {
+      const conversation = state.conversations.find((c) => c.id === id);
+      deleteDialog.targetId = id;
+      deleteDialog.name.textContent = `«${conversation?.title ?? "esta conversación"}»`;
+      deleteDialog.error.classList.add("hidden");
+      setDeleting(false);
+      deleteDialog.el.showModal();
+      deleteDialog.cancel.focus();  // safest default for a destructive action
+    }
+
+    function setDeleting(deleting) {
+      deleteDialog.confirm.disabled = deleting;
+      deleteDialog.cancel.disabled = deleting;
+      deleteDialog.confirm.textContent = deleting ? "Eliminando…" : "Eliminar";
+    }
+
+    async function confirmDeleteConversation() {
+      const id = deleteDialog.targetId;
+      setDeleting(true);
+      try {
+        await api(`/api/conversations/${id}`, { method: "DELETE" });
+        state.conversations = state.conversations.filter((c) => c.id !== id);
+        if (state.activeId === id) showWelcome(); else renderConversationList();
+        deleteDialog.el.close();
+      } catch (err) {
+        deleteDialog.error.textContent = err.message;
+        deleteDialog.error.classList.remove("hidden");
+        setDeleting(false);
+      }
+    }
+
+    deleteDialog.cancel.addEventListener("click", () => deleteDialog.el.close());
+    deleteDialog.confirm.addEventListener("click", confirmDeleteConversation);
+    // Esc and clicks on the backdrop close it, except while the request is in flight.
+    deleteDialog.el.addEventListener("cancel", (event) => { if (deleteDialog.confirm.disabled) event.preventDefault(); });
+    deleteDialog.el.addEventListener("click", (event) => {
+      if (event.target === deleteDialog.el && !deleteDialog.confirm.disabled) deleteDialog.el.close();
+    });
+
+    // ------------------------------------------------------------------ Chat
+    async function sendPrompt(raw) {
+      const prompt = raw.trim();
+      if (!prompt || state.sending) return;
+
+      showThread();
+      els.thread.insertAdjacentHTML("beforeend", userCard(prompt) + pendingCard());
+      scrollToBottom();
+      setSending(true);
+      const started = performance.now();
+
+      try {
+        const data = await api("/api/chat", {
+          method: "POST",
+          body: { prompt, conversation_id: state.activeId },
+        });
+        const seconds = ((performance.now() - started) / 1000).toFixed(1);
+        $("pending").outerHTML = botCard(data.response, `${seconds} s`);
+        const isNew = state.activeId !== data.conversation_id;
+        state.activeId = data.conversation_id;
+        if (isNew) await loadConversations(); else bumpActiveConversation();
+      } catch (err) {
+        // Nothing was saved: show the error and give the text back so it can be retried.
+        $("pending").outerHTML = errorCard(err.message);
+        els.prompt.value = prompt;
+        autoResize();
+      } finally {
+        setSending(false);
+        scrollToBottom();
+        els.prompt.focus();
+      }
+    }
+
+    function bumpActiveConversation() {
+      const index = state.conversations.findIndex((c) => c.id === state.activeId);
+      if (index < 0) return;
+      const [conversation] = state.conversations.splice(index, 1);
+      conversation.updated_at = new Date().toISOString();
+      state.conversations.unshift(conversation);
+      renderConversationList();
+    }
+
+    // ------------------------------------------------------------------ Auth
+    let authMode = "signin";
+
+    function setAuthMode(mode) {
+      authMode = mode;
+      const signup = mode === "signup";
+      els.authTitle.textContent = signup ? "Crea tu cuenta" : "Inicia sesión";
+      els.authLead.textContent = signup ? "Usa tu correo y una contraseña de al menos 6 caracteres." : "Tus conversaciones se guardan en tu cuenta.";
+      els.authSubmit.textContent = signup ? "Crear cuenta" : "Iniciar sesión";
+      els.authSwitchText.textContent = signup ? "¿Ya tienes cuenta?" : "¿No tienes cuenta?";
+      els.authSwitch.textContent = signup ? "Iniciar sesión" : "Crear cuenta";
+      els.authPassword.autocomplete = signup ? "new-password" : "current-password";
+      showAuthMessage("");
+    }
+
+    function showAuthMessage(text, kind = "error") {
+      els.authMessage.textContent = text;
+      els.authMessage.className = `notice notice-${kind}` + (text ? "" : " hidden");
+      els.authEmail.setAttribute("aria-invalid", String(Boolean(text) && kind === "error"));
+      els.authPassword.setAttribute("aria-invalid", String(Boolean(text) && kind === "error"));
+    }
+
+    const AUTH_ERRORS = {
+      "Invalid login credentials": "Correo o contraseña incorrectos.",
+      "Email not confirmed": "Confirma tu correo antes de iniciar sesión. Revisa tu bandeja de entrada.",
+      "User already registered": "Ya existe una cuenta con ese correo. Inicia sesión.",
+    };
+
+    async function submitAuth(event) {
       event.preventDefault();
-      const prompt = promptInput.value;
-      promptInput.value = "";
-      promptInput.style.height = "auto";
+      const email = els.authEmail.value.trim();
+      const password = els.authPassword.value;
+      if (!email || password.length < 6) {
+        showAuthMessage("Escribe tu correo y una contraseña de al menos 6 caracteres.");
+        return;
+      }
+      els.authSubmit.disabled = true;
+      try {
+        const auth = state.supabase.auth;
+        const { data, error } = authMode === "signup"
+          ? await auth.signUp({ email, password, options: { emailRedirectTo: window.location.origin } })
+          : await auth.signInWithPassword({ email, password });
+        if (error) {
+          showAuthMessage(AUTH_ERRORS[error.message] || error.message);
+        } else if (authMode === "signup" && !data.session) {
+          setAuthMode("signin");
+          showAuthMessage("Te enviamos un correo para confirmar tu cuenta. Después inicia sesión aquí.", "success");
+        }
+      } finally {
+        els.authSubmit.disabled = false;
+      }
+    }
+
+    // Show only the providers enabled in Supabase (Authentication -> Sign In / Providers).
+    async function setupOAuthButtons(config) {
+      try {
+        const response = await fetch(`${config.supabase_url}/auth/v1/settings`, {
+          headers: { apikey: config.supabase_publishable_key },
+        });
+        const external = (await response.json()).external || {};
+        let any = false;
+        document.querySelectorAll("[data-provider]").forEach((button) => {
+          const enabled = Boolean(external[button.dataset.provider]);
+          button.classList.toggle("hidden", !enabled);
+          any ||= enabled;
+        });
+        $("oauth-section").classList.toggle("hidden", !any);
+      } catch {
+        // Settings unreachable: keep email login only.
+      }
+    }
+
+    async function signInWithProvider(provider) {
+      document.querySelectorAll("[data-provider]").forEach((b) => { b.disabled = true; });
+      showAuthMessage("");
+      // Redirects to Google/Apple and back to this page, where the session is picked up.
+      const { error } = await state.supabase.auth.signInWithOAuth({
+        provider,
+        options: { redirectTo: window.location.origin },
+      });
+      if (error) {
+        showAuthMessage(error.message);
+        document.querySelectorAll("[data-provider]").forEach((b) => { b.disabled = false; });
+      }
+    }
+
+    // Google/Apple send errors back in the URL (e.g. the user cancelled): show them once.
+    function takeOAuthError() {
+      const params = new URLSearchParams(window.location.hash.slice(1) || window.location.search);
+      const description = params.get("error_description");
+      if (!params.get("error")) return null;
+      history.replaceState(null, "", window.location.pathname);
+      return description ? description.replace(/\+/g, " ") : "No se pudo iniciar sesión con ese proveedor.";
+    }
+
+    function onSession(session) {
+      const userChanged = session?.user?.id !== state.session?.user?.id;
+      state.session = session;
+      if (!session) {
+        state.conversations = [];
+        state.activeId = null;
+        els.authPassword.value = "";
+        show("auth");
+        return;
+      }
+      els.userEmail.textContent = session.user.email ?? "";
+      show("app");
+      if (userChanged) {
+        showWelcome();
+        loadConversations();
+      }
+    }
+
+    // ------------------------------------------------------------------ Boot
+    async function boot() {
+      try {
+        if (!window.supabase) throw new Error("No se pudo cargar el módulo de inicio de sesión. Recarga la página.");
+        const response = await fetch("/api/config");
+        const config = await response.json().catch(() => ({}));
+        if (!response.ok) throw new Error(config.detail || "No se pudo cargar la configuración.");
+
+        const oauthError = takeOAuthError();
+        state.supabase = window.supabase.createClient(config.supabase_url, config.supabase_publishable_key);
+        setupOAuthButtons(config);
+        if (oauthError) showAuthMessage(`No se pudo iniciar sesión: ${oauthError}`);
+        // Deferred: calling Supabase methods inside this callback can deadlock the client.
+        state.supabase.auth.onAuthStateChange((_event, session) => setTimeout(() => onSession(session), 0));
+        const { data } = await state.supabase.auth.getSession();
+        onSession(data.session);
+      } catch (err) {
+        els.bootCard.insertAdjacentHTML("beforeend", `<p class="notice notice-error" role="alert">${escapeHtml(err.message)}</p>`);
+        els.bootCard.querySelectorAll(".skeleton-line").forEach((el) => el.remove());
+      }
+    }
+
+    // ------------------------------------------------------------------ Events
+    els.authForm.addEventListener("submit", submitAuth);
+    els.authSwitch.addEventListener("click", () => setAuthMode(authMode === "signin" ? "signup" : "signin"));
+    document.querySelectorAll("[data-provider]").forEach((button) => {
+      button.addEventListener("click", () => signInWithProvider(button.dataset.provider));
+    });
+    els.logoutBtn.addEventListener("click", () => state.supabase.auth.signOut());
+    els.newChatBtn.addEventListener("click", () => { if (!state.sending) { showWelcome(); toggleSidebar(false); els.prompt.focus(); } });
+    els.sidebarToggle.addEventListener("click", () => toggleSidebar(!els.sidebar.classList.contains("open")));
+    els.backdrop.addEventListener("click", () => toggleSidebar(false));
+
+    els.convList.addEventListener("click", (event) => {
+      const open = event.target.closest("[data-open]");
+      const remove = event.target.closest("[data-delete]");
+      if (remove) askDeleteConversation(remove.dataset.delete);
+      else if (open) openConversation(open.dataset.open);
+    });
+
+    els.suggestions.addEventListener("click", (event) => {
+      const button = event.target.closest(".suggestion");
+      if (!button) return;
+      els.prompt.value = button.dataset.prompt;
+      autoResize();
+      els.prompt.focus();
+    });
+
+    els.prompt.addEventListener("input", autoResize);
+    els.prompt.addEventListener("keydown", (event) => {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        els.form.requestSubmit();
+      }
+    });
+
+    els.form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const prompt = els.prompt.value;
+      els.prompt.value = "";
+      autoResize();
       await sendPrompt(prompt);
     });
 
-    suggestions.addEventListener("click", (event) => {
-      const button = event.target.closest(".suggestion");
-      if (!button) return;
-      const prompt = button.dataset.prompt;
-      promptInput.value = prompt;
-      promptInput.dispatchEvent(new Event("input"));
-      promptInput.focus();
-    });
+    boot();
   </script>
 </body>
 </html>

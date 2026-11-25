@@ -1,0 +1,17 @@
+# Not needed (or not safe) in the deployment
+.env
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.claude/
+tests/
+docs/
+supabase/
+requirements-dev.txt
+pytest.ini
+ruff.toml
+mypy.ini
+Help.txt

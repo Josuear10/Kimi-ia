@@ -3,3 +3,10 @@
 __pycache__/
 *.pyc
 .vercel
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Local-only files (not versioned)
+docs/
+.env.example
