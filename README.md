@@ -1,6 +1,6 @@
 # 🥝 Kiwi.ia
 
-**Tu asistente de inteligencia artificial que recuerda tus conversaciones.**
+**Asistente de Inteligencia Virtual**
 
 Kiwi.ia es un chat con IA donde puedes preguntar lo que quieras: aprender un tema nuevo,
 pedir ideas, resumir textos o redactar mensajes. Inicia sesión con tu cuenta y Kiwi guardará
